@@ -7,8 +7,9 @@ import {
   LayoutDashboard, Wallet, List, Target, Lightbulb,
   Bell, Shield, Eye, Plus, Edit2, Trash2, Download, FileText,
   Search, X, ArrowUpRight, ArrowDownRight, TrendingUp, TrendingDown,
-  AlertTriangle, CheckCircle, ChevronRight,
-  ChevronLeft, ChevronDown, Sun, Moon, Sparkles, Zap
+  AlertTriangle, CheckCircle, ChevronRight, Bot,
+  ChevronLeft, ChevronDown, Sun, Moon, Sparkles, Zap,
+  Flag, Upload, Calendar, Send, RefreshCw, PiggyBank, Flame, Clock
 } from "lucide-react";
 
 /* ─── Config ──────────────────────────────────────────────────────────────── */
@@ -149,6 +150,7 @@ const PER_PAGE = 10;
 const getCSS = (isDark) => `
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=JetBrains+Mono:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body,#root{width:100%;max-width:100%;margin:0;padding:0}
 
 :root{
   --bg:${isDark?"#04050f":"#f0eeff"};
@@ -213,6 +215,10 @@ html,body{
   color:var(--tx);
   overflow-x:hidden;
   min-height:100vh;
+  width:100%;
+  max-width:100%;
+  margin:0;
+  padding:0;
   position:relative;
 }
 html::before{
@@ -230,11 +236,11 @@ html::before{
 
 * { transition:background-color .25s ease,color .25s ease,border-color .25s ease; }
 
-.app{display:flex;min-height:100vh;position:relative;z-index:1}
+.app{display:flex;min-height:100vh;width:100%;max-width:100%;position:relative;z-index:1;overflow:hidden}
 
 /* ── SIDEBAR ── */
 .sb{
-  width:240px;flex-shrink:0;
+  width:240px;flex-shrink:0;flex-grow:0;
   background:${isDark?"rgba(8,10,26,0.96)":"rgba(255,252,255,0.97)"};
   border-right:1px solid var(--b1);
   display:flex;flex-direction:column;
@@ -243,7 +249,7 @@ html::before{
   z-index:200;
   box-shadow:4px 0 30px rgba(191,95,255,.08);
 }
-.sb.min{width:64px}
+.sb.min{width:64px;flex-shrink:0;flex-grow:0}
 
 .sb-logo{
   display:flex;align-items:center;gap:12px;
@@ -319,7 +325,7 @@ html::before{
 .sb-mini:hover{background:var(--hov);color:var(--tx)}
 
 /* ── MAIN ── */
-.ma{flex:1;display:flex;flex-direction:column;min-width:0;overflow:hidden}
+.ma{flex:1;display:flex;flex-direction:column;min-width:0;width:0;overflow:hidden}
 
 /* ── HEADER ── */
 .hdr{
@@ -331,6 +337,8 @@ html::before{
   position:sticky;top:0;z-index:100;
   backdrop-filter:blur(24px);
   box-shadow:0 2px 20px rgba(191,95,255,.06);
+  width:100%;
+  box-sizing:border-box;
 }
 .hdr::after{
   content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
@@ -434,7 +442,7 @@ html::before{
 .vb{display:flex;align-items:center;gap:6px;padding:8px 24px;background:linear-gradient(90deg,rgba(191,95,255,.08),rgba(0,212,255,.05));border-bottom:1px solid rgba(191,95,255,.15);font-size:11px;color:#bf5fff;font-weight:600}
 
 /* ── CONTENT ── */
-.cnt{padding:0;overflow-y:auto;flex:1;width:100%}
+.cnt{padding:0;overflow-y:auto;overflow-x:hidden;flex:1;width:100%;max-width:100%}
 
 /* ── STAT CARDS ── */
 .scs{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;padding:24px;padding-bottom:24px}
@@ -478,78 +486,88 @@ html::before{
 .sc-trend.up{background:rgba(57,255,20,.2);color:#39ff14;border:1px solid rgba(57,255,20,.3);text-shadow:0 0 8px rgba(57,255,20,.5)}
 .sc-trend.down{background:rgba(255,45,120,.2);color:#ff2d78;border:1px solid rgba(255,45,120,.3);text-shadow:0 0 8px rgba(255,45,120,.5)}
 
-/* Card Themes — vivid neon gradients */
-.sc.balance{
-  background:linear-gradient(135deg,#0d0040 0%,#2a0080 40%,#00208a 80%,#001040 100%);
-  border-color:rgba(100,80,255,.5);
-  box-shadow:0 8px 32px rgba(80,0,255,.3),inset 0 1px 0 rgba(180,140,255,.2);
-}
-.sc.balance .sc-orb{background:#6040ff}
-.sc.balance:hover{box-shadow:0 20px 60px rgba(80,0,255,.5),0 0 40px rgba(100,60,255,.2),inset 0 1px 0 rgba(180,140,255,.3)}
+/* Card Themes — every card a unique hue on the color wheel */
 
+/* 1. BALANCE — Electric Blue → Indigo */
+.sc.balance{
+  background:linear-gradient(135deg,#00057a 0%,#0033cc 45%,#3300cc 80%,#1a0066 100%);
+  border-color:rgba(51,100,255,.6);
+  box-shadow:0 8px 32px rgba(0,60,255,.35),inset 0 1px 0 rgba(120,160,255,.25);
+}
+.sc.balance .sc-orb{background:#2255ff}
+.sc.balance:hover{box-shadow:0 20px 60px rgba(0,60,255,.55),0 0 50px rgba(80,100,255,.2)}
+
+/* 2. INCOME — Neon Lime → Emerald Green */
 .sc.income{
-  background:linear-gradient(135deg,#001a00 0%,#003300 40%,#00401a 80%,#001a0d 100%);
-  border-color:rgba(57,255,20,.4);
-  box-shadow:0 8px 32px rgba(0,200,0,.2),inset 0 1px 0 rgba(57,255,20,.2);
+  background:linear-gradient(135deg,#003300 0%,#006600 40%,#009933 75%,#003322 100%);
+  border-color:rgba(57,255,20,.5);
+  box-shadow:0 8px 32px rgba(0,180,0,.3),inset 0 1px 0 rgba(80,255,80,.2);
 }
 .sc.income .sc-orb{background:#39ff14}
-.sc.income:hover{box-shadow:0 20px 60px rgba(0,200,0,.35),0 0 40px rgba(57,255,20,.15),inset 0 1px 0 rgba(57,255,20,.3)}
+.sc.income:hover{box-shadow:0 20px 60px rgba(0,200,0,.45),0 0 50px rgba(57,255,20,.2)}
 
+/* 3. EXPENSE — Crimson Red → Hot Rose */
 .sc.expense{
-  background:linear-gradient(135deg,#1a0010 0%,#400020 40%,#600010 80%,#300010 100%);
-  border-color:rgba(255,45,120,.45);
-  box-shadow:0 8px 32px rgba(255,45,120,.25),inset 0 1px 0 rgba(255,45,120,.2);
+  background:linear-gradient(135deg,#5a0000 0%,#aa0022 40%,#cc0044 75%,#660011 100%);
+  border-color:rgba(255,20,60,.55);
+  box-shadow:0 8px 32px rgba(220,0,40,.3),inset 0 1px 0 rgba(255,80,100,.2);
 }
-.sc.expense .sc-orb{background:#ff2d78}
-.sc.expense:hover{box-shadow:0 20px 60px rgba(255,45,120,.4),0 0 40px rgba(255,45,120,.15),inset 0 1px 0 rgba(255,45,120,.3)}
+.sc.expense .sc-orb{background:#ff1440}
+.sc.expense:hover{box-shadow:0 20px 60px rgba(220,0,40,.5),0 0 50px rgba(255,20,60,.2)}
 
+/* 4. SAVINGS — Solar Gold → Amber */
 .sc.savings{
-  background:linear-gradient(135deg,#1a1000 0%,#3a2000 40%,#503000 80%,#201000 100%);
-  border-color:rgba(255,230,0,.4);
-  box-shadow:0 8px 32px rgba(255,200,0,.2),inset 0 1px 0 rgba(255,230,0,.2);
+  background:linear-gradient(135deg,#4a2800 0%,#8a4c00 40%,#cc7700 75%,#3d2000 100%);
+  border-color:rgba(255,180,0,.55);
+  box-shadow:0 8px 32px rgba(200,130,0,.3),inset 0 1px 0 rgba(255,210,60,.2);
 }
-.sc.savings .sc-orb{background:#ffe600}
-.sc.savings:hover{box-shadow:0 20px 60px rgba(255,200,0,.35),0 0 40px rgba(255,230,0,.15)}
+.sc.savings .sc-orb{background:#ffaa00}
+.sc.savings:hover{box-shadow:0 20px 60px rgba(200,140,0,.5),0 0 50px rgba(255,190,0,.2)}
 
+/* 5. DAILY — Electric Violet → Deep Magenta */
 .sc.daily{
-  background:linear-gradient(135deg,#100030 0%,#300060 40%,#500080 80%,#200040 100%);
-  border-color:rgba(191,95,255,.45);
-  box-shadow:0 8px 32px rgba(191,95,255,.25),inset 0 1px 0 rgba(191,95,255,.2);
+  background:linear-gradient(135deg,#2d0050 0%,#6600aa 40%,#aa00cc 75%,#1a002e 100%);
+  border-color:rgba(180,0,255,.55);
+  box-shadow:0 8px 32px rgba(140,0,220,.3),inset 0 1px 0 rgba(210,80,255,.2);
 }
-.sc.daily .sc-orb{background:#bf5fff}
-.sc.daily:hover{box-shadow:0 20px 60px rgba(191,95,255,.4),0 0 40px rgba(191,95,255,.15)}
+.sc.daily .sc-orb{background:#bb00ff}
+.sc.daily:hover{box-shadow:0 20px 60px rgba(150,0,240,.5),0 0 50px rgba(180,0,255,.2)}
 
+/* 6. BUDGET — Volcanic Orange → Rust */
 .sc.budget{
-  background:linear-gradient(135deg,#1a0800 0%,#401800 40%,#602000 80%,#301000 100%);
-  border-color:rgba(255,107,53,.4);
-  box-shadow:0 8px 32px rgba(255,107,53,.2),inset 0 1px 0 rgba(255,107,53,.2);
+  background:linear-gradient(135deg,#4a1400 0%,#993300 40%,#cc5500 75%,#331000 100%);
+  border-color:rgba(255,100,30,.55);
+  box-shadow:0 8px 32px rgba(200,70,0,.3),inset 0 1px 0 rgba(255,140,60,.2);
 }
-.sc.budget .sc-orb{background:#ff6b35}
-.sc.budget:hover{box-shadow:0 20px 60px rgba(255,107,53,.35),0 0 40px rgba(255,107,53,.15)}
+.sc.budget .sc-orb{background:#ff6600}
+.sc.budget:hover{box-shadow:0 20px 60px rgba(210,80,0,.5),0 0 50px rgba(255,110,30,.2)}
 
+/* 7. RECURRING — Aqua Cyan → Ocean Blue */
 .sc.recurring{
-  background:linear-gradient(135deg,#180030 0%,#400060 40%,#600090 80%,#280050 100%);
-  border-color:rgba(255,45,120,.4);
-  box-shadow:0 8px 32px rgba(255,45,120,.2),inset 0 1px 0 rgba(255,45,120,.2);
+  background:linear-gradient(135deg,#001a33 0%,#004488 40%,#0077cc 75%,#001122 100%);
+  border-color:rgba(0,190,255,.55);
+  box-shadow:0 8px 32px rgba(0,140,220,.3),inset 0 1px 0 rgba(0,220,255,.2);
 }
-.sc.recurring .sc-orb{background:#ff2d78}
-.sc.recurring:hover{box-shadow:0 20px 60px rgba(255,45,120,.35),0 0 40px rgba(255,45,120,.15)}
+.sc.recurring .sc-orb{background:#00bbff}
+.sc.recurring:hover{box-shadow:0 20px 60px rgba(0,150,230,.5),0 0 50px rgba(0,200,255,.2)}
 
+/* 8. HEALTH — Mint Teal → Seafoam */
 .sc.health{
-  background:linear-gradient(135deg,#001a14 0%,#003326 40%,#004838 80%,#001a14 100%);
-  border-color:rgba(0,255,204,.35);
-  box-shadow:0 8px 32px rgba(0,255,204,.15),inset 0 1px 0 rgba(0,255,204,.2);
+  background:linear-gradient(135deg,#001a18 0%,#004a3a 40%,#007a5a 75%,#001510 100%);
+  border-color:rgba(0,255,190,.45);
+  box-shadow:0 8px 32px rgba(0,190,150,.25),inset 0 1px 0 rgba(0,255,200,.2);
 }
 .sc.health .sc-orb{background:#00ffcc}
-.sc.health:hover{box-shadow:0 20px 60px rgba(0,255,204,.3),0 0 40px rgba(0,255,204,.12)}
+.sc.health:hover{box-shadow:0 20px 60px rgba(0,200,160,.4),0 0 50px rgba(0,255,190,.15)}
 
+/* 9. DANGER — Neon Pink → Deep Fuchsia */
 .sc.danger{
-  background:linear-gradient(135deg,#1a0010 0%,#500020 40%,#700030 80%,#300010 100%);
-  border-color:rgba(255,45,120,.5);
-  box-shadow:0 8px 32px rgba(255,45,120,.3),inset 0 1px 0 rgba(255,45,120,.2);
+  background:linear-gradient(135deg,#3d0030 0%,#880055 40%,#cc0077 75%,#220018 100%);
+  border-color:rgba(255,0,140,.55);
+  box-shadow:0 8px 32px rgba(220,0,120,.3),inset 0 1px 0 rgba(255,60,180,.2);
 }
-.sc.danger .sc-orb{background:#ff2d78}
-.sc.danger:hover{box-shadow:0 20px 60px rgba(255,45,120,.45),0 0 40px rgba(255,45,120,.2)}
+.sc.danger .sc-orb{background:#ff0088}
+.sc.danger:hover{box-shadow:0 20px 60px rgba(230,0,130,.5),0 0 50px rgba(255,0,140,.2)}
 
 /* ── CHART CONTAINERS ── */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding:0 24px 24px}
@@ -800,9 +818,106 @@ html::before{
 .rel{position:relative}
 
 /* Responsive */
-@media(max-width:1200px){.scs{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.tips-row{grid-template-columns:1fr}}
-@media(max-width:900px){.sb{display:none}.scs{grid-template-columns:1fr 1fr}}
-@media(max-width:620px){.scs{grid-template-columns:1fr}.hdr{padding:10px 14px}.g2,.g3,.g1{padding:0 14px 14px}.scs{padding:14px}}
+@media(max-width:1200px){.scs{grid-template-columns:repeat(2,1fr)}.g2{grid-template-columns:1fr}.tips-row{grid-template-columns:1fr 1fr}}
+@media(max-width:900px){.sb{display:none}.scs{grid-template-columns:1fr 1fr}.ma{width:100%}}
+@media(max-width:620px){.scs{grid-template-columns:1fr}.hdr{padding:10px 14px}.g2,.g3,.g1{padding:0 14px 14px}.scs{padding:14px}.tips-row{grid-template-columns:1fr}}
+
+/* ── AI ADVISOR ── */
+.ai-wrap{display:flex;flex-direction:column;height:calc(100vh - 120px);padding:0 24px 24px;gap:16px}
+.ai-chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:20px;background:${isDark?"rgba(11,13,32,.95)":"rgba(255,255,255,.95)"};border:1px solid var(--b1);border-radius:16px;min-height:0}
+.ai-msg{display:flex;gap:10px;align-items:flex-start;animation:fi .2s ease}
+.ai-msg.user{flex-direction:row-reverse}
+.ai-avatar{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+.ai-avatar.bot{background:linear-gradient(135deg,#bf5fff,#00d4ff);box-shadow:0 0 12px rgba(191,95,255,.4)}
+.ai-avatar.usr{background:linear-gradient(135deg,#ff6b35,#ff2d78);box-shadow:0 0 12px rgba(255,107,53,.4)}
+.ai-bubble{max-width:75%;padding:12px 16px;border-radius:14px;font-size:12.5px;line-height:1.6;position:relative}
+.ai-bubble.bot{background:${isDark?"rgba(191,95,255,.1)":"rgba(191,95,255,.08)"};border:1px solid rgba(191,95,255,.2);color:var(--tx);border-top-left-radius:4px}
+.ai-bubble.usr{background:linear-gradient(135deg,rgba(0,212,255,.15),rgba(191,95,255,.1));border:1px solid rgba(0,212,255,.25);color:var(--tx);border-top-right-radius:4px}
+.ai-time{font-size:9px;color:var(--mu);margin-top:4px;opacity:.7}
+.ai-input-row{display:flex;gap:10px;align-items:flex-end}
+.ai-input{flex:1;background:${isDark?"rgba(11,13,32,.95)":"rgba(255,255,255,.95)"};border:1px solid var(--b1);border-radius:12px;padding:12px 16px;color:var(--tx);font-family:var(--fn);font-size:13px;outline:none;resize:none;line-height:1.5;max-height:120px;min-height:44px}
+.ai-input:focus{border-color:rgba(191,95,255,.5);box-shadow:0 0 12px rgba(191,95,255,.12)}
+.ai-send{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#bf5fff,#00d4ff);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#fff;flex-shrink:0;box-shadow:0 4px 14px rgba(191,95,255,.4)}
+.ai-send:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.ai-send:disabled{opacity:.4;cursor:default;transform:none}
+.ai-chips-row{display:flex;gap:6px;flex-wrap:wrap;padding:0 0 2px}
+.ai-chip{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid rgba(191,95,255,.3);background:rgba(191,95,255,.08);color:#bf5fff;white-space:nowrap}
+.ai-chip:hover{background:rgba(191,95,255,.16);border-color:rgba(191,95,255,.5)}
+.ai-typing{display:flex;align-items:center;gap:4px;padding:4px 0}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:#bf5fff;animation:typing 1.4s infinite}
+.ai-dot:nth-child(2){animation-delay:.2s}
+.ai-dot:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-6px);opacity:1}}
+.ai-stats-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:0 24px 16px}
+.ai-stat{background:${isDark?"rgba(11,13,32,.95)":"rgba(255,255,255,.95)"};border:1px solid var(--b1);border-radius:12px;padding:14px;text-align:center}
+.ai-stat-v{font-family:var(--fm);font-size:18px;font-weight:700;margin-bottom:3px}
+.ai-stat-l{font-size:10px;color:var(--su);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+
+/* ── GOALS ── */
+.goals-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;padding:0 24px 24px}
+.goal-card{background:${isDark?"rgba(11,13,32,.95)":"rgba(255,255,255,.95)"};border:1px solid var(--b1);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:all .25s}
+.goal-card:hover{border-color:rgba(191,95,255,.35);transform:translateY(-3px);box-shadow:0 10px 32px rgba(191,95,255,.12)}
+.goal-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:16px 16px 0 0}
+.goal-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.goal-ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.goal-actions{display:flex;gap:6px;opacity:0;transition:opacity .2s}
+.goal-card:hover .goal-actions{opacity:1}
+.goal-name{font-size:15px;font-weight:700;margin-bottom:3px}
+.goal-deadline{font-size:10.5px;color:var(--su);display:flex;align-items:center;gap:4px}
+.goal-amounts{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+.goal-curr{font-family:var(--fm);font-size:20px;font-weight:700}
+.goal-tgt{font-family:var(--fm);font-size:11.5px;color:var(--su)}
+.goal-bar{height:8px;background:var(--b1);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.goal-fill{height:100%;border-radius:4px;transition:width 1s ease;position:relative}
+.goal-fill::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent 50%,rgba(255,255,255,.25));border-radius:4px}
+.goal-pct{font-family:var(--fm);font-size:10px;color:var(--mu);margin-bottom:14px}
+.goal-contrib{display:flex;gap:8px;align-items:center;margin-top:2px}
+.goal-inp{flex:1;background:var(--b0);border:1px solid var(--b1);border-radius:8px;padding:7px 10px;color:var(--tx);font-family:var(--fm);font-size:12px;outline:none}
+.goal-inp:focus{border-color:rgba(191,95,255,.5)}
+.goal-add-btn{padding:7px 14px;border-radius:8px;background:linear-gradient(135deg,#bf5fff,#00d4ff);border:none;color:#fff;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(191,95,255,.3)}
+.goal-add-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.goal-completed{display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(57,255,20,.1);border:1px solid rgba(57,255,20,.25);border-radius:8px;font-size:11.5px;font-weight:700;color:#39ff14;margin-top:4px}
+.new-goal-btn{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--b0);border:2px dashed var(--b2);border-radius:16px;padding:32px 20px;cursor:pointer;color:var(--su);font-size:13px;font-weight:600;transition:all .2s;min-height:180px}
+.new-goal-btn:hover{border-color:rgba(191,95,255,.4);color:#bf5fff;background:rgba(191,95,255,.05)}
+
+/* Goal Modal extra */
+.gm-colors{display:flex;gap:8px;flex-wrap:wrap}
+.gm-color{width:28px;height:28px;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0}
+.gm-color.sel{border-color:#fff;transform:scale(1.15);box-shadow:0 0 10px rgba(255,255,255,.3)}
+
+/* ── CSV IMPORT ── */
+.csv-drop{border:2px dashed rgba(191,95,255,.35);border-radius:14px;padding:40px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(191,95,255,.04)}
+.csv-drop:hover,.csv-drop.drag{border-color:rgba(191,95,255,.7);background:rgba(191,95,255,.09);box-shadow:0 0 20px rgba(191,95,255,.1)}
+.csv-preview{background:${isDark?"rgba(11,13,32,.95)":"rgba(255,255,255,.95)"};border:1px solid var(--b1);border-radius:12px;overflow:hidden;max-height:260px;overflow-y:auto;margin-top:14px}
+
+/* ── HEATMAP ── */
+.heatmap-wrap{padding:8px 0}
+.heatmap-grid{display:flex;gap:3px;overflow-x:auto;padding-bottom:4px}
+.heatmap-col{display:flex;flex-direction:column;gap:3px}
+.heatmap-cell{width:14px;height:14px;border-radius:3px;flex-shrink:0;transition:transform .1s}
+.heatmap-cell:hover{transform:scale(1.4);z-index:10;position:relative}
+.heatmap-months{display:flex;gap:0;margin-bottom:6px;font-size:9px;color:var(--mu);font-weight:600;letter-spacing:.5px}
+.heatmap-days{display:flex;flex-direction:column;gap:3px;margin-right:6px;font-size:9px;color:var(--mu)}
+
+/* ── FORECAST ── */
+.forecast-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:0 24px 24px}
+.fc-card{background:${isDark?"rgba(11,13,32,.95)":"rgba(255,255,255,.95)"};border:1px solid var(--b1);border-radius:14px;padding:18px;position:relative;overflow:hidden}
+.fc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.fc-label{font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--mu);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.fc-value{font-family:var(--fm);font-size:22px;font-weight:700;margin-bottom:4px}
+.fc-note{font-size:11px;color:var(--su);line-height:1.5}
+.fc-badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:8px;font-size:10px;font-weight:700;margin-top:8px}
+
+/* ── BILL CALENDAR ── */
+.bill-list{display:flex;flex-direction:column;gap:8px}
+.bill-row{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--b0);border:1px solid var(--b1);border-radius:12px;transition:all .2s}
+.bill-row:hover{border-color:rgba(191,95,255,.3);background:rgba(191,95,255,.05)}
+.bill-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.bill-due{font-family:var(--fm);font-size:10px;color:var(--mu)}
+.bill-days{padding:3px 8px;border-radius:8px;font-size:10px;font-weight:700;font-family:var(--fm)}
+.bill-days.soon{background:rgba(255,107,53,.15);color:#ff6b35;border:1px solid rgba(255,107,53,.25)}
+.bill-days.urgent{background:rgba(255,45,120,.15);color:#ff2d78;border:1px solid rgba(255,45,120,.25)}
+.bill-days.ok{background:rgba(57,255,20,.1);color:#39ff14;border:1px solid rgba(57,255,20,.2)}
 `;
 
 export default function App(){
@@ -827,6 +942,28 @@ export default function App(){
   const [pieMonth,setPieMonth] = useState(3);
   const nRef = useRef(null);
   const rRef = useRef(null);
+
+  /* ── Goals state ── */
+  const GOAL_COLORS = ["#bf5fff","#00d4ff","#39ff14","#ff2d78","#ffe600","#ff6b35","#00ffcc","#2255ff","#ff0088"];
+  const [goals,setGoals] = useState([
+    {id:1,name:"Emergency Fund",target:300000,current:185000,deadline:"2026-12-31",icon:"🛡️",color:"#bf5fff"},
+    {id:2,name:"Vacation to Goa",target:80000,current:32000,deadline:"2026-11-15",icon:"🏖️",color:"#00d4ff"},
+    {id:3,name:"New Laptop",target:120000,current:120000,deadline:"2026-06-01",icon:"💻",color:"#39ff14"},
+    {id:4,name:"Wedding Fund",target:500000,current:75000,deadline:"2027-03-01",icon:"💍",color:"#ff2d78"},
+  ]);
+  const [goalModal,setGoalModal] = useState(false);
+  const [editGoal,setEditGoal] = useState(null);
+  const [goalForm,setGoalForm] = useState({name:"",target:"",current:"",deadline:"",icon:"🎯",color:"#bf5fff"});
+  const [contribAmts,setContribAmts] = useState({});
+
+  /* ── AI Advisor state ── */
+  const [aiMessages,setAiMessages] = useState([
+    {role:"assistant",content:"Hi! 👋 I'm your AI Financial Advisor. I can analyze your spending patterns, suggest savings strategies, and answer any finance questions. What would you like to know?",time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})}
+  ]);
+  const [aiInput,setAiInput] = useState("");
+  const [aiLoading,setAiLoading] = useState(false);
+  const chatEndRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   useEffect(()=>{
     const h=e=>{
@@ -937,6 +1074,264 @@ export default function App(){
 
   const onChip=cat=>{setChipCat(c=>c===cat?null:cat);setPage(1);};
 
+  /* ── AI Advisor ── */
+  useEffect(()=>{chatEndRef.current?.scrollIntoView({behavior:"smooth"});},[aiMessages,aiLoading]);
+
+  const buildFinancialContext=()=>{
+    const topCats=Object.entries(catSpend).sort((a,b)=>b[1]-a[1]);
+    const overBudget=Object.entries(budgets).filter(([k,v])=>(catSpend[k]||0)>v);
+    const underBudget=Object.entries(budgets).filter(([k,v])=>(catSpend[k]||0)<=v);
+    const recExpenses=txns.filter(t=>t.recurring&&t.type==="expense");
+    const recIncome=txns.filter(t=>t.recurring&&t.type==="income");
+    const monthlyBreakdown=MONTHS.map(({l,n})=>{
+      const mt=txns.filter(t=>new Date(t.date).getMonth()+1===n);
+      const inc=mt.filter(t=>t.type==="income").reduce((s,t)=>s+t.amount,0);
+      const exp=mt.filter(t=>t.type==="expense").reduce((s,t)=>s+t.amount,0);
+      return`  ${l}: Income ₹${inc.toLocaleString("en-IN")}, Expenses ₹${exp.toLocaleString("en-IN")}, Net ₹${(inc-exp).toLocaleString("en-IN")}`;
+    }).join("\n");
+    const recentTxns=[...txns].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,15)
+      .map(t=>`  ${t.date} | ${t.type==="income"?"Income":"Expense"} | ${t.category} | ${t.description} | ₹${t.amount.toLocaleString("en-IN")}`).join("\n");
+    const goalsSummary=goals.map(g=>`  ${g.name}: ₹${g.current.toLocaleString("en-IN")} of ₹${g.target.toLocaleString("en-IN")} (${Math.round((g.current/g.target)*100)}%) — deadline ${g.deadline}`).join("\n");
+
+    return `You are a personal AI Financial Advisor for a FinTrack app user. You have full access to their financial data below. Answer ONLY based on this real data. Be specific, cite actual numbers from their data, and give actionable advice. Use ₹ for currency (Indian Rupees).
+
+═══════════════════════════════════════
+USER FINANCIAL PROFILE (Jan–Jun 2026)
+═══════════════════════════════════════
+
+📊 OVERALL SUMMARY:
+• Total Income: ₹${sum.inc.toLocaleString("en-IN")}
+• Total Expenses: ₹${sum.exp.toLocaleString("en-IN")}
+• Net Savings: ₹${sum.bal.toLocaleString("en-IN")}
+• Savings Rate: ${health.savRate}%
+• Financial Health Score: ${health.total}/100 (${health.total>=75?"Excellent":health.total>=60?"Good":health.total>=40?"Fair":"Poor"})
+• Avg Monthly Income: ₹${Math.round(sum.inc/6).toLocaleString("en-IN")}
+• Avg Monthly Expense: ₹${Math.round(sum.exp/6).toLocaleString("en-IN")}
+
+📅 MONTH-BY-MONTH BREAKDOWN:
+${monthlyBreakdown}
+
+💸 CATEGORY SPENDING (all-time):
+${topCats.map(([cat,amt])=>{
+  const bud=budgets[cat];
+  const pct=bud?Math.round((amt/bud)*100):null;
+  return`  ${cat}: ₹${amt.toLocaleString("en-IN")}${bud?` (budget ₹${bud.toLocaleString("en-IN")}, ${pct}% used${pct>100?" — OVER BUDGET":""})`:""}`;
+}).join("\n")}
+
+🚨 OVER-BUDGET CATEGORIES (${overBudget.length}):
+${overBudget.length?overBudget.map(([k,v])=>`  ${k}: spent ₹${(catSpend[k]||0).toLocaleString("en-IN")} vs budget ₹${v.toLocaleString("en-IN")} (over by ₹${((catSpend[k]||0)-v).toLocaleString("en-IN")})`).join("\n"):"  None — all categories within budget!"}
+
+✅ WITHIN-BUDGET CATEGORIES (${underBudget.length}):
+${underBudget.map(([k,v])=>`  ${k}: ₹${(catSpend[k]||0).toLocaleString("en-IN")} of ₹${v.toLocaleString("en-IN")}`).join("\n")}
+
+🔄 RECURRING EXPENSES (${recExpenses.length} items):
+${recExpenses.map(t=>`  ${t.description} (${t.category}): ₹${t.amount.toLocaleString("en-IN")}/month`).join("\n")}
+  Total recurring monthly: ₹${recExpenses.reduce((s,t)=>s+t.amount,0).toLocaleString("en-IN")}
+
+💼 INCOME SOURCES:
+${[...txns.filter(t=>t.type==="income")].reduce((acc,t)=>{acc[t.description]=(acc[t.description]||0)+t.amount;return acc;},{})}
+${Object.entries(txns.filter(t=>t.type==="income").reduce((acc,t)=>{acc[t.description]=(acc[t.description]||0)+t.amount;return acc;},{})).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([d,a])=>`  ${d}: ₹${a.toLocaleString("en-IN")}`).join("\n")}
+
+🎯 SAVINGS GOALS (${goals.length} total):
+${goalsSummary||"  No goals set yet"}
+  Total saved toward goals: ₹${goals.reduce((s,g)=>s+g.current,0).toLocaleString("en-IN")} of ₹${goals.reduce((s,g)=>s+g.target,0).toLocaleString("en-IN")}
+
+📋 RECENT 15 TRANSACTIONS:
+${recentTxns}
+
+═══════════════════════════════════════
+INSTRUCTIONS:
+• Always reference the user's ACTUAL numbers when answering
+• Be specific: "Your Housing spend of ₹1,08,000 is exactly on budget" not "you spend a lot on housing"
+• Give 2-3 concrete, actionable recommendations
+• If asked about a category, pull exact figures from the data above
+• Keep responses conversational and under 200 words unless detail is requested
+• Format numbers with ₹ and Indian number system (lakhs/thousands)`;
+  };
+
+  const sendAiMessage=async()=>{
+    const txt=aiInput.trim();
+    if(!txt||aiLoading)return;
+    const now=new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"});
+    // Capture the new user message before state update
+    const userMsg={role:"user",content:txt,time:now};
+    setAiMessages(prev=>[...prev,userMsg]);
+    setAiInput("");
+    setAiLoading(true);
+
+    try{
+      // Build financial context and generate local AI response
+      const ctx=buildFinancialContext();
+      const aiResponse=generateLocalAiResponse(txt,ctx);
+      
+      setAiMessages(prev=>[...prev,{
+        role:"assistant",
+        content:aiResponse,
+        time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})
+      }]);
+    }catch(err){
+      console.error("AI error:",err);
+      setAiMessages(prev=>[...prev,{
+        role:"assistant",
+        content:`Sorry, I encountered an error. Please try again.`,
+        time:new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"})
+      }]);
+    }
+    setAiLoading(false);
+  };
+
+  // Local AI response generator
+  const generateLocalAiResponse=(userQuery,financialContext)=>{
+    const query=userQuery.toLowerCase();
+    
+    // Extract key financial data from context
+    const totalIncome=sum.inc;
+    const totalExpenses=sum.exp;
+    const savingsRate=health.savRate;
+    const healthScore=health.total;
+    
+    // Analyze spending patterns
+    const topCategories=Object.entries(catSpend).sort((a,b)=>b[1]-a[1]).slice(0,3);
+    const overBudget=Object.entries(budgets).filter(([k,v])=>(catSpend[k]||0)>v);
+    
+    // Generate responses based on query type
+    if(query.includes("overspend")||query.includes("spending")){
+      if(overBudget.length>0){
+        return `You're overspending in ${overBudget.length} categories. Your top overspending category is ${overBudget[0][0]} where you've spent Rs.${(catSpend[overBudget[0][0]]||0).toLocaleString("en-IN")} against a budget of Rs.${overBudget[0][1].toLocaleString("en-IN")}. Consider cutting back on ${topCategories[0][0]} which is your highest expense at Rs.${topCategories[0][1].toLocaleString("en-IN")}.`;
+      } else {
+        return `Great news! You're within budget in all categories. Your highest spending is ${topCategories[0][0]} at Rs.${topCategories[0][1].toLocaleString("en-IN")}, which is ${budgets[topCategories[0][0]]?`within your budget of Rs.${budgets[topCategories[0][0]].toLocaleString("en-IN")}`:`a category to monitor`}.`;
+      }
+    }
+    
+    if(query.includes("savings")||query.includes("save")){
+      if(savingsRate<20){
+        return `Your current savings rate is ${savingsRate}%, which is below the recommended 20%. To improve this, try reducing your ${topCategories[0][0]} expenses by Rs.${Math.round((totalExpenses*0.2-totalExpenses*savingsRate/100)/12).toLocaleString("en-IN")}/month or look for ways to increase your income.`;
+      } else {
+        return `Excellent! Your savings rate is ${savingsRate}%, which is healthy. Consider investing your surplus of Rs.${Math.round(totalExpenses*(savingsRate-20)/100).toLocaleString("en-IN")} for better returns.`;
+      }
+    }
+    
+    if(query.includes("subscription")||query.includes("cut")){
+      const recurring=txns.filter(t=>t.recurring&&t.type==="expense");
+      if(recurring.length>0){
+        const highRecurring=recurring.filter(t=>t.amount>1000).sort((a,b)=>b.amount-a.amount);
+        return `You have ${recurring.length} recurring expenses totaling Rs.${recurring.reduce((s,t)=>s+t.amount,0).toLocaleString("en-IN")}/month. Consider reviewing ${highRecurring[0]?.description||'your subscriptions'} which costs Rs.${highRecurring[0]?.amount.toLocaleString("en-IN")||'0'}/month.`;
+      } else {
+        return `I don't see any recurring subscriptions in your data. Review your monthly expenses for any services you could cancel.`;
+      }
+    }
+    
+    if(query.includes("budget")||query.includes("plan")){
+      return `Based on your income of Rs.${totalIncome.toLocaleString("en-IN")} and expenses of Rs.${totalExpenses.toLocaleString("en-IN")}, here's a suggested budget: ${topCategories.map(([cat,amt],i)=>`${cat}: Rs.${Math.round(amt*0.9).toLocaleString("en-IN")}`).join(", ")}. This would increase your savings to ${Math.round((totalIncome-totalExpenses*0.9)/totalIncome*100)}%.`;
+    }
+    
+    if(query.includes("goal")||query.includes("track")){
+      if(goals.length>0){
+        const onTrack=goals.filter(g=>g.current/g.target>=0.5);
+        return `You have ${goals.length} goals. ${onTrack.length} are on track (${Math.round(onTrack.length/goals.length*100)}%). Focus on ${goals.find(g=>g.current/g.target<0.5)?.name||'your goals'} by increasing monthly contributions by Rs.${Math.round((goals.find(g=>g.current/g.target<0.5)?.target-goals.find(g=>g.current/g.target<0.5)?.current)/6).toLocaleString("en-IN")}.`;
+      } else {
+        return `You haven't set any financial goals yet. Consider setting goals for emergency fund, retirement, or major purchases.`;
+      }
+    }
+    
+    if(query.includes("compare")||query.includes("average")){
+      return `Your spending pattern shows ${topCategories[0][0]} as your biggest expense at Rs.${topCategories[0][1].toLocaleString("en-IN")}. Your savings rate of ${savingsRate}% is ${savingsRate>=20?"above":"below"} the recommended 20%. Consider this when planning your budget.`;
+    }
+    
+    // Default response
+    return `Based on your financial data: Your income is Rs.${totalIncome.toLocaleString("en-IN")}, expenses are Rs.${totalExpenses.toLocaleString("en-IN")}, with a ${healthScore}/100 health score. Your top expense category is ${topCategories[0][0]} at Rs.${topCategories[0][1].toLocaleString("en-IN")}. What specific aspect would you like me to analyze?`;
+  };
+
+  const AI_PROMPTS=["Where am I overspending?","How can I improve my savings rate?","Which subscriptions should I cut?","Give me a monthly budget plan","Am I on track for my goals?","How does my spending compare to averages?"];
+
+  /* ── Goals ── */
+  const openGoalModal=(g=null)=>{
+    setEditGoal(g);
+    setGoalForm(g?{name:g.name,target:String(g.target),current:String(g.current),deadline:g.deadline,icon:g.icon,color:g.color}:{name:"",target:"",current:"0",deadline:"",icon:"🎯",color:"#bf5fff"});
+    setGoalModal(true);
+  };
+  const saveGoal=()=>{
+    const t=parseFloat(goalForm.target),c=parseFloat(goalForm.current)||0;
+    if(!goalForm.name||isNaN(t)||t<=0||!goalForm.deadline)return;
+    if(editGoal) setGoals(p=>p.map(g=>g.id===editGoal.id?{...g,...goalForm,target:t,current:c}:g));
+    else setGoals(p=>[...p,{id:Date.now(),...goalForm,target:t,current:c}]);
+    setGoalModal(false);
+  };
+  const contributeToGoal=(id)=>{
+    const amt=parseFloat(contribAmts[id]||0);
+    if(isNaN(amt)||amt<=0)return;
+    setGoals(p=>p.map(g=>g.id===id?{...g,current:Math.min(g.current+amt,g.target)}:g));
+    setContribAmts(p=>({...p,[id]:""}));
+  };
+  const deleteGoal=id=>setGoals(p=>p.filter(g=>g.id!==id));
+  const daysLeft=deadline=>{
+    const d=Math.ceil((new Date(deadline)-new Date())/(1000*60*60*24));
+    return d;
+  };
+
+  /* ── CSV Import ── */
+  const handleCSV=(file)=>{
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const lines=e.target.result.split("\n").filter(l=>l.trim());
+      const rows=lines.slice(1);
+      const newTxns=rows.map((row,i)=>{
+        const cols=row.match(/(".*?"|[^,]+)/g)||[];
+        const clean=s=>(s||"").replace(/^"|"$/g,"").trim();
+        const date=clean(cols[0]);
+        const desc=clean(cols[1]);
+        const cat=CATS.includes(clean(cols[2]))?clean(cols[2]):"Food";
+        const type=clean(cols[3])==="income"?"income":"expense";
+        const amt=parseFloat(clean(cols[4]))||0;
+        if(!date||!desc||amt<=0)return null;
+        return{id:Date.now()+i,date,description:desc,category:cat,type,amount:amt,recurring:false};
+      }).filter(Boolean);
+      if(newTxns.length>0){
+        setTxns(p=>[...newTxns,...p]);
+        alert(`✅ Imported ${newTxns.length} transactions successfully!`);
+      }else{
+        alert("No valid transactions found. Make sure your CSV has columns: Date, Description, Category, Type, Amount");
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  /* ── Forecast ── */
+  const forecast=useMemo(()=>{
+    const months=monthly.filter(m=>m.exp>0);
+    if(months.length<2)return{income:0,expense:0,savings:0};
+    const avgInc=months.reduce((s,m)=>s+m.inc,0)/months.length;
+    const avgExp=months.reduce((s,m)=>s+m.exp,0)/months.length;
+    const trend=months.length>=3?(months[months.length-1].exp-months[0].exp)/(months.length-1)*0.1:0;
+    const projExp=Math.max(0,avgExp+trend);
+    return{income:Math.round(avgInc),expense:Math.round(projExp),savings:Math.round(avgInc-projExp)};
+  },[monthly]);
+
+  /* ── Heatmap ── */
+  const heatmapData=useMemo(()=>{
+    const map={};
+    txns.filter(t=>t.type==="expense").forEach(t=>{map[t.date]=(map[t.date]||0)+t.amount;});
+    return map;
+  },[txns]);
+  const heatmapMax=Math.max(1,...Object.values(heatmapData));
+
+  /* ── Upcoming bills ── */
+  const upcomingBills=useMemo(()=>{
+    const today=new Date();
+    return txns.filter(t=>t.recurring&&t.type==="expense")
+      .map(t=>{
+        const lastDate=new Date(t.date);
+        const nextDate=new Date(lastDate);
+        nextDate.setMonth(nextDate.getMonth()+1);
+        while(nextDate<today) nextDate.setMonth(nextDate.getMonth()+1);
+        const days=Math.ceil((nextDate-today)/(1000*60*60*24));
+        return{...t,nextDate:nextDate.toISOString().split("T")[0],daysUntil:days};
+      })
+      .sort((a,b)=>a.daysUntil-b.daysUntil)
+      .slice(0,8);
+  },[txns]);
+
   /* ── AI TIPS ── */
   const aiTips=useMemo(()=>{
     const tips=[];
@@ -958,9 +1353,11 @@ export default function App(){
     {id:"transactions",icon:<List className="sni"/>,label:"Transactions"},
     {id:"budget",icon:<Target className="sni"/>,label:"Budget Goals"},
     {id:"insights",icon:<Lightbulb className="sni"/>,label:"Insights"},
+    {id:"goals",icon:<Flag className="sni"/>,label:"Goals"},
+    {id:"advisor",icon:<Bot className="sni"/>,label:"AI Advisor"},
   ];
-  const tabMeta={overview:"Overview",wallet:"Wallet",transactions:"Transactions",budget:"Budget Goals",insights:"Insights"};
-  const tabSub={overview:"Your complete financial picture",wallet:"Spending & recurring breakdown",transactions:"All transactions & history",budget:"Set & track spending limits",insights:"Analytics & health score"};
+  const tabMeta={overview:"Overview",wallet:"Wallet",transactions:"Transactions",budget:"Budget Goals",insights:"Insights",goals:"Savings Goals",advisor:"AI Financial Advisor"};
+  const tabSub={overview:"Your complete financial picture",wallet:"Spending & recurring breakdown",transactions:"All transactions & history",budget:"Set & track spending limits",insights:"Analytics & health score",goals:"Track your financial goals",advisor:"Get personalized AI insights"};
 
   const getChartData=()=>{
     if(timeView==="weekly") return[
@@ -1017,6 +1414,38 @@ export default function App(){
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Forecast Next Month */}
+        <div style={{padding:"0 24px 4px"}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:14}}>
+            <div style={{width:28,height:28,borderRadius:8,background:"rgba(255,230,0,.12)",display:"flex",alignItems:"center",justifyContent:"center",color:"#ffe600"}}><Flame size={14}/></div>
+            <span style={{fontSize:11,fontWeight:700,letterSpacing:".6px",textTransform:"uppercase",color:"#ffe600"}}>Next Month Forecast</span>
+            <span style={{fontSize:10,color:"var(--mu)",fontWeight:500}}>Based on your 6-month average</span>
+          </div>
+        </div>
+        <div className="forecast-strip">
+          {[
+            {label:"Projected Income",value:fmt(forecast.income),note:"Based on avg monthly inflows",color:"#39ff14",icon:"📈",trend:"up"},
+            {label:"Projected Expenses",value:fmt(forecast.expense),note:"Includes trend adjustment",color:"#ff2d78",icon:"💳",trend:forecast.expense>forecast.income?"down":"up"},
+            {label:"Projected Savings",value:fmt(forecast.savings),note:`${forecast.income>0?((forecast.savings/forecast.income)*100).toFixed(1):0}% projected savings rate`,color:forecast.savings>=0?"#ffe600":"#ff2d78",icon:"🎯",trend:forecast.savings>=0?"up":"down"},
+          ].map((f,i)=>(
+            <div key={i} className="fc-card">
+              <div className="fc-card" style={{padding:0,background:"none",border:"none"}}>
+                <div style={{position:"absolute",top:0,left:0,right:0,height:2,background:`linear-gradient(90deg,${f.color},transparent)`}}/>
+              </div>
+              <div className="fc-label">
+                <span style={{fontSize:16}}>{f.icon}</span>
+                {f.label}
+              </div>
+              <div className="fc-value" style={{color:f.color}}>{f.value}</div>
+              <div className="fc-note">{f.note}</div>
+              <div className="fc-badge" style={{background:`${f.color}18`,color:f.color,border:`1px solid ${f.color}30`}}>
+                {f.trend==="up"?<TrendingUp size={10}/>:<TrendingDown size={10}/>}
+                {f.trend==="up"?"Positive":"Watch out"}
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Charts */}
@@ -1217,6 +1646,36 @@ export default function App(){
                 ))}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* Upcoming Bills Calendar */}
+        <div className="g1">
+          <div className="cc">
+            <div className="cc-hd">
+              <span className="cc-tt">📅 Upcoming Bill Due Dates</span>
+              <span className="cc-bj">Next 30 days</span>
+            </div>
+            <div className="bill-list">
+              {upcomingBills.length===0?(
+                <div className="emp"><div className="emp-ic">🎉</div><div className="emp-t">No upcoming bills</div></div>
+              ):upcomingBills.map((b,i)=>{
+                const urgency=b.daysUntil<=3?"urgent":b.daysUntil<=14?"soon":"ok";
+                return(
+                  <div key={i} className="bill-row">
+                    <div className="bill-ic" style={{background:CAT[b.category]?.bg}}>{CAT[b.category]?.icon}</div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:12.5,fontWeight:600,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{b.description}</div>
+                      <div className="bill-due">Due: {new Date(b.nextDate).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}</div>
+                    </div>
+                    <div style={{fontFamily:"var(--fm)",fontSize:13,fontWeight:700,marginRight:8}}>{fmt(b.amount)}</div>
+                    <div className={`bill-days ${urgency}`}>
+                      {b.daysUntil===0?"Today":b.daysUntil===1?"Tomorrow":`${b.daysUntil}d`}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
@@ -1469,9 +1928,300 @@ export default function App(){
             ))}
           </div>
         </div>
+
+        {/* Spending Heatmap */}
+        <div className="g1">
+          <div className="cc">
+            <div className="cc-hd">
+              <span className="cc-tt">Daily Spending Heatmap</span>
+              <span className="cc-bj">Jan–Jun 2026</span>
+            </div>
+            <div style={{overflowX:"auto"}}>
+              {(()=>{
+                const months=["Jan","Feb","Mar","Apr","May","Jun"];
+                const startDate=new Date("2026-01-01");
+                const allDays=[];
+                for(let d=new Date(startDate);d<=new Date("2026-06-30");d.setDate(d.getDate()+1)){
+                  allDays.push(d.toISOString().split("T")[0]);
+                }
+                // group by week
+                const startDow=startDate.getDay();
+                const cells=[];
+                for(let i=0;i<startDow;i++) cells.push(null);
+                allDays.forEach(d=>cells.push(d));
+                const weeks=[];
+                for(let i=0;i<cells.length;i+=7) weeks.push(cells.slice(i,i+7));
+                const dayLabels=["S","M","T","W","T","F","S"];
+                return(
+                  <div style={{display:"flex",gap:0}}>
+                    <div style={{display:"flex",flexDirection:"column",gap:3,marginRight:6,paddingTop:20}}>
+                      {dayLabels.map((d,i)=><div key={i} style={{height:14,fontSize:9,color:"var(--mu)",lineHeight:"14px",fontWeight:600}}>{i%2===1?d:""}</div>)}
+                    </div>
+                    <div style={{flex:1,overflowX:"auto"}}>
+                      <div style={{display:"flex",gap:0,marginBottom:4}}>
+                        {months.map((m,mi)=>{
+                          const mStart=new Date(2026,mi,1);
+                          const dow=mStart.getDay();
+                          const weekIdx=Math.floor((Math.floor((mStart-startDate)/(86400000))+startDow)/7);
+                          return<div key={m} style={{position:"absolute",left:`${weekIdx*17}px`,fontSize:9,color:"var(--mu)",fontWeight:700}}>{m}</div>;
+                        })}
+                        <div style={{height:14,position:"relative",width:`${weeks.length*17}px`}}>
+                          {months.map((m,mi)=>{
+                            const mStart=new Date(2026,mi,1);
+                            const weekIdx=Math.floor((Math.floor((mStart-startDate)/(86400000))+startDow)/7);
+                            return<span key={m} style={{position:"absolute",left:`${weekIdx*17}px`,fontSize:9,color:"var(--mu)",fontWeight:700,letterSpacing:.4}}>{m}</span>;
+                          })}
+                        </div>
+                      </div>
+                      <div style={{display:"flex",gap:3}}>
+                        {weeks.map((week,wi)=>(
+                          <div key={wi} style={{display:"flex",flexDirection:"column",gap:3}}>
+                            {week.map((day,di)=>{
+                              if(!day) return<div key={di} style={{width:14,height:14}}/>;
+                              const amt=heatmapData[day]||0;
+                              const intensity=amt/heatmapMax;
+                              const alpha=amt===0?0.05:0.15+intensity*0.85;
+                              const color=amt===0?"rgba(180,140,255,.06)":`rgba(191,95,255,${alpha})`;
+                              return(
+                                <div key={di} title={`${day}: ${amt>0?fmt(amt):"No spending"}`}
+                                  style={{width:14,height:14,borderRadius:3,background:color,border:`1px solid rgba(191,95,255,${alpha*.4})`,cursor:"default",transition:"transform .1s",boxShadow:amt>0?`0 0 ${intensity*8}px rgba(191,95,255,${intensity*.4})`:""}}
+                                  onMouseEnter={e=>e.target.style.transform="scale(1.5)"}
+                                  onMouseLeave={e=>e.target.style.transform="scale(1)"}
+                                />
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div style={{display:"flex",alignItems:"center",gap:6,marginLeft:14,flexShrink:0}}>
+                      <span style={{fontSize:9,color:"var(--mu)"}}>Less</span>
+                      {[0.05,0.25,0.5,0.75,1].map((v,i)=>(
+                        <div key={i} style={{width:12,height:12,borderRadius:3,background:`rgba(191,95,255,${v===0.05?0.06:0.15+v*0.85})`}}/>
+                      ))}
+                      <span style={{fontSize:9,color:"var(--mu)"}}>More</span>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          </div>
+        </div>
       </div>
     );
   };
+
+  /* ─────────────────────────────────────────────
+     GOALS VIEW
+  ──────────────────────────────────────────── */
+  const vGoals=()=>{
+    const totalGoalTarget=goals.reduce((s,g)=>s+g.target,0);
+    const totalGoalCurrent=goals.reduce((s,g)=>s+g.current,0);
+    const completed=goals.filter(g=>g.current>=g.target).length;
+    return(
+      <div className="fi">
+        <div className="scs">
+          {[
+            {lb:"Total Goals",v:String(goals.length),cls:"balance",ic:"🎯",note:"Active targets"},
+            {lb:"Total Saved",v:fmt(totalGoalCurrent),cls:"income",ic:"💰",note:`of ${fmt(totalGoalTarget)} target`},
+            {lb:"Completed",v:String(completed),cls:"health",ic:"✅",note:"Goals achieved"},
+            {lb:"Overall Progress",v:`${totalGoalTarget>0?Math.round((totalGoalCurrent/totalGoalTarget)*100):0}%`,cls:"savings",ic:"📊",note:"Across all goals"},
+          ].map((c,i)=>(
+            <div key={i} className={`sc ${c.cls}`}>
+              <div className="sc-ic">{c.ic}</div>
+              <div className="sc-lb">{c.lb}</div>
+              <div className="sc-vl">{c.v}</div>
+              <div className="sc-nt">{c.note}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* CSV Import strip */}
+        <div style={{padding:"0 24px 20px",display:"flex",alignItems:"center",gap:10}}>
+          <div style={{flex:1,padding:"12px 16px",background:"var(--b0)",border:"1px solid var(--b1)",borderRadius:12,display:"flex",alignItems:"center",gap:10,fontSize:12,color:"var(--su)"}}>
+            <Upload size={14} color="#bf5fff"/>
+            <span>Import transactions from your bank — </span>
+            <input ref={fileInputRef} type="file" accept=".csv" style={{display:"none"}} onChange={e=>handleCSV(e.target.files[0])}/>
+            <button onClick={()=>fileInputRef.current?.click()} style={{background:"linear-gradient(135deg,#bf5fff,#00d4ff)",border:"none",borderRadius:8,padding:"5px 14px",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer",boxShadow:"0 3px 10px rgba(191,95,255,.3)"}}>
+              Upload CSV
+            </button>
+            <span style={{fontSize:10,color:"var(--mu)"}}>Format: Date, Description, Category, Type, Amount</span>
+          </div>
+        </div>
+
+        <div className="goals-grid">
+          {goals.map(g=>{
+            const pct=Math.min((g.current/g.target)*100,100);
+            const done=g.current>=g.target;
+            const days=daysLeft(g.deadline);
+            const urgency=days<=7?"urgent":days<=30?"soon":"ok";
+            return(
+              <div key={g.id} className="goal-card" style={{borderTop:`2px solid ${g.color}`}}>
+                <div className="goal-top">
+                  <div style={{display:"flex",alignItems:"center",gap:12}}>
+                    <div className="goal-ic" style={{background:`${g.color}18`,border:`1px solid ${g.color}30`}}>{g.icon}</div>
+                    <div>
+                      <div className="goal-name">{g.name}</div>
+                      <div className="goal-deadline">
+                        <Calendar size={10}/>
+                        {new Date(g.deadline).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"})}
+                        {" · "}
+                        <span style={{color:urgency==="urgent"?"#ff2d78":urgency==="soon"?"#ff6b35":"#39ff14",fontWeight:700}}>
+                          {days>0?`${days}d left`:"Past due"}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  {role==="admin"&&(
+                    <div className="goal-actions">
+                      <button className="ab ed" onClick={()=>openGoalModal(g)}><Edit2 size={11}/></button>
+                      <button className="ab dl" onClick={()=>deleteGoal(g.id)}><Trash2 size={11}/></button>
+                    </div>
+                  )}
+                </div>
+
+                <div className="goal-amounts">
+                  <div className="goal-curr" style={{color:g.color}}>{fmt(g.current)}</div>
+                  <div className="goal-tgt">of {fmt(g.target)}</div>
+                </div>
+
+                <div className="goal-bar">
+                  <div className="goal-fill" style={{width:`${pct}%`,background:`linear-gradient(90deg,${g.color},${g.color}cc)`}}/>
+                </div>
+                <div className="goal-pct" style={{color:g.color}}>{pct.toFixed(1)}% complete · {fmt(g.target-g.current)} remaining</div>
+
+                {done?(
+                  <div className="goal-completed"><CheckCircle size={14}/> Goal Achieved! 🎉</div>
+                ):role==="admin"&&(
+                  <div className="goal-contrib">
+                    <input className="goal-inp" type="number" placeholder="Contribute ₹" value={contribAmts[g.id]||""} onChange={e=>setContribAmts(p=>({...p,[g.id]:e.target.value}))} onKeyDown={e=>e.key==="Enter"&&contributeToGoal(g.id)}/>
+                    <button className="goal-add-btn" onClick={()=>contributeToGoal(g.id)}>Add ₹</button>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+          {role==="admin"&&(
+            <div className="new-goal-btn" onClick={()=>openGoalModal()}>
+              <Plus size={20} color="#bf5fff"/>
+              <span>Add New Goal</span>
+            </div>
+          )}
+        </div>
+
+        {/* Goal Modal */}
+        {goalModal&&(
+          <div className="mbk" onClick={e=>e.target===e.currentTarget&&setGoalModal(false)}>
+            <div className="mdl">
+              <div className="m-tt">
+                {editGoal?"Edit Goal":"New Goal"}
+                <button style={{background:"none",border:"none",color:"var(--su)",cursor:"pointer",display:"flex",padding:0}} onClick={()=>setGoalModal(false)}><X size={14}/></button>
+              </div>
+              <div className="m-fd"><label className="m-lb">Goal Name</label><input className="m-ip" placeholder="e.g. Emergency Fund" value={goalForm.name} onChange={e=>setGoalForm(p=>({...p,name:e.target.value}))}/></div>
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+                <div className="m-fd"><label className="m-lb">Target (₹)</label><input className="m-ip" type="number" placeholder="100000" value={goalForm.target} onChange={e=>setGoalForm(p=>({...p,target:e.target.value}))}/></div>
+                <div className="m-fd"><label className="m-lb">Saved So Far (₹)</label><input className="m-ip" type="number" placeholder="0" value={goalForm.current} onChange={e=>setGoalForm(p=>({...p,current:e.target.value}))}/></div>
+              </div>
+              <div className="m-fd"><label className="m-lb">Target Date</label><input className="m-ip" type="date" value={goalForm.deadline} onChange={e=>setGoalForm(p=>({...p,deadline:e.target.value}))}/></div>
+              <div className="m-fd"><label className="m-lb">Icon</label><input className="m-ip" value={goalForm.icon} onChange={e=>setGoalForm(p=>({...p,icon:e.target.value}))} style={{fontSize:20,textAlign:"center"}}/></div>
+              <div className="m-fd">
+                <label className="m-lb">Color</label>
+                <div className="gm-colors">
+                  {GOAL_COLORS.map(c=>(
+                    <div key={c} className={`gm-color${goalForm.color===c?" sel":""}`} style={{background:c}} onClick={()=>setGoalForm(p=>({...p,color:c}))}/>
+                  ))}
+                </div>
+              </div>
+              <div className="m-ac">
+                <button className="m-cn" onClick={()=>setGoalModal(false)}>Cancel</button>
+                <button className="m-sb" onClick={saveGoal}>{editGoal?"Save Changes":"Create Goal"}</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  /* ─────────────────────────────────────────────
+     AI ADVISOR VIEW
+  ──────────────────────────────────────────── */
+  const vAdvisor=()=>(
+    <div className="fi">
+      {/* Summary stats for context */}
+      <div className="ai-stats-strip">
+        {[
+          {label:"Monthly Income",value:fmt(Math.round(sum.inc/6)),color:"#39ff14"},
+          {label:"Monthly Expense",value:fmt(Math.round(sum.exp/6)),color:"#ff2d78"},
+          {label:"Savings Rate",value:`${health.savRate}%`,color:"#ffe600"},
+          {label:"Health Score",value:`${health.total}/100`,color:"#bf5fff"},
+        ].map((s,i)=>(
+          <div key={i} className="ai-stat">
+            <div className="ai-stat-v" style={{color:s.color}}>{s.value}</div>
+            <div className="ai-stat-l">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="ai-wrap">
+        {/* Quick prompt chips */}
+        <div className="ai-chips-row">
+          {AI_PROMPTS.map((p,i)=>(
+            <div key={i} className="ai-chip" onClick={()=>{setAiInput(p);}}>
+              {p}
+            </div>
+          ))}
+        </div>
+
+        {/* Chat window */}
+        <div className="ai-chat">
+          {aiMessages.map((m,i)=>(
+            <div key={i} className={`ai-msg ${m.role==="user"?"user":"bot"}`}>
+              <div className={`ai-avatar ${m.role==="user"?"usr":"bot"}`}>
+                {m.role==="user"?"👤":"🤖"}
+              </div>
+              <div>
+                <div className={`ai-bubble ${m.role==="user"?"usr":"bot"}`}>
+                  {m.content}
+                </div>
+                <div className="ai-time" style={{textAlign:m.role==="user"?"right":"left"}}>{m.time}</div>
+              </div>
+            </div>
+          ))}
+          {aiLoading&&(
+            <div className="ai-msg bot">
+              <div className="ai-avatar bot">🤖</div>
+              <div className="ai-bubble bot">
+                <div className="ai-typing">
+                  <div className="ai-dot"/><div className="ai-dot"/><div className="ai-dot"/>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={chatEndRef}/>
+        </div>
+
+        {/* Input */}
+        <div className="ai-input-row">
+          <textarea
+            className="ai-input"
+            placeholder="Ask about your spending, savings, budget tips…"
+            value={aiInput}
+            rows={1}
+            onChange={e=>setAiInput(e.target.value)}
+            onKeyDown={e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendAiMessage();}}}
+          />
+          <button className="ai-send" disabled={!aiInput.trim()||aiLoading} onClick={sendAiMessage}>
+            {aiLoading?<RefreshCw size={16} style={{animation:"spin 1s linear infinite"}}/>:<Send size={16}/>}
+          </button>
+        </div>
+        <div style={{fontSize:10,color:"var(--mu)",textAlign:"center",marginTop:-4}}>
+          Powered by Claude AI · Press Enter to send · Shift+Enter for new line
+        </div>
+      </div>
+      <style>{`@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
 
   return(
     <div className="app">
@@ -1625,6 +2375,8 @@ export default function App(){
           {tab==="transactions"&&vTransactions()}
           {tab==="budget"      &&vBudget()}
           {tab==="insights"    &&vInsights()}
+          {tab==="goals"       &&vGoals()}
+          {tab==="advisor"     &&vAdvisor()}
         </div>
       </div>
 
